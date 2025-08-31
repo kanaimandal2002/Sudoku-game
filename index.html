@@ -1,1 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .sudoku-container {
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 1px;
+            border: 3px solid #2c3e50;
+            background-color: #2c3e50;
+            margin: 0 auto;
+        }
+        
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            user-select: none;
+        }
+        
+        @media (max-width: 500px) {
+            .cell {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+        
+        .cell:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .cell.selected {
+            background-color: #bde0ff;
+        }
+        
+        .cell.fixed {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .cell.user-input {
+            color: #3498db;
+        }
+        
+        .border-right-3 {
+            border-right: 3px solid #2c3e50;
+        }
+        
+        .border-bottom-3 {
+            border-bottom: 3px solid #2c3e50;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .number-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: 15px 0;
+        }
+        
+        .number-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .game-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .github-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .github-btn:hover {
+            background-color: #555;
+        }
+        
+        .difficulty {
+            margin: 15px 0;
+        }
+        
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sudoku Game</h1>
+        <p class="description">Fill the board so that each row, column, and 3×3 box contains the digits 1-9 without repetition.</p>
+        
+        <div class="timer">Time: <span id="timer">00:00</span></div>
+        
+        <div class="sudoku-container">
+            <div class="sudoku-board" id="sudoku-board">
+                <!-- Board will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="number-controls">
+            <!-- Number buttons will be generated by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button id="new-game">New Game</button>
+            <button id="check-solution">Check Solution</button>
+            <button id="solve">Solve</button>
+            <button id="reset">Reset</button>
+        </div>
+        
+        <div class="difficulty">
+            <h3>Difficulty:</h3>
+            <div class="controls">
+                <button data-difficulty="easy">Easy</button>
+                <button data-difficulty="medium">Medium</button>
+                <button data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+        
+        <div class="game-info">
+            <h3>How to Play:</h3>
+            <p>1. Click on a cell to select it</p>
+            <p>2. Use number buttons or keyboard to fill the cell</p>
+            <p>3. Each row, column and 3×3 box must contain all digits from 1 to 9</p>
+            <p>4. Use 'Check Solution' to verify your progress</p>
+        </div>
+        
+        <div class="github-section">
+            <p>Push this game to your GitHub repository!</p>
+            <a href="https://github.com" class="github-btn" target="_blank">Push to GitHub</a>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const boardElement = document.getElementById('sudoku-board');
+            const numberControls = document.querySelector('.number-controls');
+            const newGameBtn = document.getElementById('new-game');
+            const checkSolutionBtn = document.getElementById('check-solution');
+            const solveBtn = document.getElementById('solve');
+            const resetBtn = document.getElementById('reset');
+            const timerElement = document.getElementById('timer');
+            const difficultyButtons = document.querySelectorAll('[data-difficulty]');
+            
+            let selectedCell = null;
+            let board = [];
+            let solution = [];
+            let startTime;
+            let timerInterval;
+            let difficulty = 'medium';
+            
+            // Initialize the game
+            initGame();
+            
+            // Initialize game board and controls
+            function initGame() {
+                createEmptyBoard();
+                generateNumberControls();
+                setupEventListeners();
+                startNewGame();
+            }
+            
+            // Create empty board UI
+            function createEmptyBoard() {
+                boardElement.innerHTML = '';
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        
+                        // Add thicker borders for 3x3 boxes
+                        if (j % 3 === 2 && j < 8) {
+                            cell.classList.add('border-right-3');
+                        }
+                        if (i % 3 === 2 && i < 8) {
+                            cell.classList.add('border-bottom-3');
+                        }
+                        
+                        boardElement.appendChild(cell);
+                    }
+                }
+            }
+            
+            // Generate number buttons
+            function generateNumberControls() {
+                numberControls.innerHTML = '';
+                for (let i = 1; i <= 9; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'number-btn';
+                    btn.textContent = i;
+                    btn.dataset.number = i;
+                    numberControls.appendChild(btn);
+                }
+                
+                // Add clear button
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'number-btn';
+                clearBtn.textContent = 'X';
+                clearBtn.dataset.number = '0';
+                numberControls.appendChild(clearBtn);
+            }
+            
+            // Set up event listeners
+            function setupEventListeners() {
+                // Cell selection
+                boardElement.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('cell')) {
+                        selectCell(e.target);
+                    }
+                });
+                
+                // Number input
+                numberControls.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('number-btn') && selectedCell) {
+                        const number = e.target.dataset.number;
+                        if (number === '0') {
+                            clearCell(selectedCell);
+                        } else {
+                            inputNumber(selectedCell, number);
+                        }
+                    }
+                });
+                
+                // Keyboard support
+                document.addEventListener('keydown', function(e) {
+                    if (selectedCell) {
+                        if (e.key >= '1' && e.key <= '9') {
+                            inputNumber(selectedCell, e.key);
+                        } else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
+                            clearCell(selectedCell);
+                        }
+                    }
+                });
+                
+                // Control buttons
+                newGameBtn.addEventListener('click', startNewGame);
+                checkSolutionBtn.addEventListener('click', checkSolution);
+                solveBtn.addEventListener('click', solvePuzzle);
+                resetBtn.addEventListener('click', resetGame);
+                
+                // Difficulty buttons
+                difficultyButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        difficulty = this.dataset.difficulty;
+                        startNewGame();
+                    });
+                });
+            }
+            
+            // Select a cell
+            function selectCell(cell) {
+                // Remove previous selection
+                if (selectedCell) {
+                    selectedCell.classList.remove('selected');
+                }
+                
+                // Set new selection
+                selectedCell = cell;
+                cell.classList.add('selected');
+            }
+            
+            // Input a number into a cell
+            function inputNumber(cell, number) {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
+                // Only allow input on non-fixed cells
+                if (!cell.classList.contains('fixed')) {
+                    cell.textContent = number;
+                    cell.classList.add('user-input');
+                    board[row][col] = parseInt(number);
+                    
+                    // Check if the move is correct
+                    if (board[row][col] !== solution[row][col]) {
+                        cell.style.color = '#e74c3c'; // Red for incorrect
+                    } else {
+                        cell.style.color = '#3498db'; // Blue for correct
+                    }
+                    
+                    // Check if the game is complete
+                    if (isBoardComplete()) {
+                        clearInterval(timerInterval);
+                        setTimeout(() => {
+                            alert('Congratulations! You solved the puzzle!');
+                        }, 500);
+                    }
+                }
+            }
+            
+            // Clear a cell
+            function clearCell(cell) {
+                if (!cell.classList.contains('fixed')) {
+                    cell.textContent = '';
+                    cell.classList.remove('user-input');
+                    cell.style.color = '#3498db';
+                    
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    board[row][col] = 0;
+                }
+            }
+            
+            // Start a new game
+            function startNewGame() {
+                resetTimer();
+                startTimer();
+                
+                // Generate a new puzzle
+                generatePuzzle();
+                
+                // Update the board UI
+                updateBoardUI();
+                
+                // Clear selection
+                if (selectedCell) {
+                    selectedCell.classList.remove('selected');
+                    selectedCell = null;
+                }
+            }
+            
+            // Reset the game to initial state
+            function resetGame() {
+                resetTimer();
+                startTimer();
+                
+                // Reset the board to initial state
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                        if (!cell.classList.contains('fixed')) {
+                            cell.textContent = '';
+                            cell.classList.remove('user-input');
+                            cell.style.color = '#3498db';
+                            board[i][j] = 0;
+                        } else {
+                            board[i][j] = parseInt(cell.textContent);
+                        }
+                    }
+                }
+                
+                // Clear selection
+                if (selectedCell) {
+                    selectedCell.classList.remove('selected');
+                    selectedCell = null;
+                }
+            }
+            
+            // Check the current solution
+            function checkSolution() {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                        if (board[i][j] !== solution[i][j]) {
+                            cell.style.backgroundColor = '#ffebee';
+                            setTimeout(() => {
+                                cell.style.backgroundColor = '';
+                            }, 1000);
+                        }
+                    }
+                }
+            }
+            
+            // Solve the puzzle
+            function solvePuzzle() {
+                clearInterval(timerInterval);
+                
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                        cell.textContent = solution[i][j];
+                        cell.classList.add('user-input');
+                        board[i][j] = solution[i][j];
+                        
+                        if (!cell.classList.contains('fixed')) {
+                            cell.style.color = '#2ecc71'; // Green for solved cells
+                        }
+                    }
+                }
+            }
+            
+            // Generate a new puzzle
+            function generatePuzzle() {
+                // For a real implementation, you would generate a valid Sudoku puzzle here
+                // For this example, we'll use a hardcoded medium difficulty puzzle
+                
+                // Solution board (complete Sudoku)
+                solution = [
+                    [5, 3, 4, 6, 7, 8, 9, 1, 2],
+                    [6, 7, 2, 1, 9, 5, 3, 4, 8],
+                    [1, 9, 8, 3, 4, 2, 5, 6, 7],
+                    [8, 5, 9, 7, 6, 1, 4, 2, 3],
+                    [4, 2, 6, 8, 5, 3, 7, 9, 1],
+                    [7, 1, 3, 9, 2, 4, 8, 5, 6],
+                    [9, 6, 1, 5, 3, 7, 2, 8, 4],
+                    [2, 8, 7, 4, 1, 9, 6, 3, 5],
+                    [3, 4, 5, 2, 8, 6, 1, 7, 9]
+                ];
+                
+                // Create a copy of the solution for the current board
+                board = JSON.parse(JSON.stringify(solution));
+                
+                // Based on difficulty, remove some numbers
+                let cellsToRemove;
+                switch(difficulty) {
+                    case 'easy':
+                        cellsToRemove = 30;
+                        break;
+                    case 'hard':
+                        cellsToRemove = 50;
+                        break;
+                    case 'medium':
+                    default:
+                        cellsToRemove = 40;
+                }
+                
+                // Remove numbers to create the puzzle
+                let removed = 0;
+                while (removed < cellsToRemove) {
+                    const row = Math.floor(Math.random() * 9);
+                    const col = Math.floor(Math.random() * 9);
+                    
+                    if (board[row][col] !== 0) {
+                        board[row][col] = 0;
+                        removed++;
+                    }
+                }
+            }
+            
+            // Update the board UI based on the current board state
+            function updateBoardUI() {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                        
+                        // Clear previous classes
+                        cell.className = 'cell';
+                        if (j % 3 === 2 && j < 8) cell.classList.add('border-right-3');
+                        if (i % 3 === 2 && i < 8) cell.classList.add('border-bottom-3');
+                        
+                        // Set cell content
+                        if (board[i][j] !== 0) {
+                            cell.textContent = board[i][j];
+                            cell.classList.add('fixed');
+                        } else {
+                            cell.textContent = '';
+                            cell.classList.remove('fixed');
+                        }
+                    }
+                }
+            }
+            
+            // Check if the board is complete
+            function isBoardComplete() {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (board[i][j] !== solution[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            
+            // Timer functions
+            function startTimer() {
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+            
+            function updateTimer() {
+                const currentTime = new Date();
+                const elapsedTime = new Date(currentTime - startTime);
+                
+                const minutes = elapsedTime.getMinutes().toString().padStart(2, '0');
+                const seconds = elapsedTime.getSeconds().toString().padStart(2, '0');
+                
+                timerElement.textContent = `${minutes}:${seconds}`;
+            }
+            
+            function resetTimer() {
+                clearInterval(timerInterval);
+                timerElement.textContent = '00:00';
+            }
+        });
+    </script>
+</body>
+</html>
