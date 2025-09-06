@@ -1,146 +1,248 @@
-/* style.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
+    color: #333;
 }
 
 .container {
+    max-width: 800px;
     width: 100%;
-    max-width: 400px;
-}
-
-.card {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-
-.card-image {
-    height: 200px;
-    overflow: hidden;
-}
-
-.card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.card:hover .card-image img {
-    transform: scale(1.05);
-}
-
-.card-content {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     padding: 25px;
-}
-
-.card-title {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.card-text {
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.card-details {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.card-details p {
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #444;
-}
-
-.card-details ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.card-details li {
-    margin-bottom: 8px;
-    color: #555;
-    position: relative;
-}
-
-.card-details li:before {
-    content: "•";
-    color: #4e54c8;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
-.counter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
     margin-top: 20px;
 }
 
-.counter button {
-    background: #4e54c8;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.counter button:hover {
-    background: #3f43a6;
-    transform: scale(1.1);
-}
-
-.counter button:active {
-    transform: scale(0.95);
-}
-
-#count {
-    font-size: 1.5rem;
-    font-weight: 600;
-    min-width: 40px;
+header {
     text-align: center;
-    color: #333;
+    margin-bottom: 25px;
 }
 
-@media (max-width: 480px) {
-    .card-content {
-        padding: 20px;
+h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.difficulty {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.difficulty-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.difficulty-btn.active {
+    background: #2c3e50;
+    transform: scale(1.05);
+}
+
+.difficulty-btn:hover {
+    background: #2980b9;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 1px;
+    margin: 20px 0;
+    border: 3px solid #2c3e50;
+    background: #2c3e50;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.cell {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: white;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+@media (max-width: 600px) {
+    .cell {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
     }
-    
-    .card-title {
-        font-size: 1.3rem;
-    }
+}
+
+.cell:hover {
+    background: #f1f1f1;
+}
+
+.cell.selected {
+    background: #aed6f1;
+}
+
+.cell.fixed {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.cell.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.border-right-3 {
+    border-right: 3px solid #2c3e50;
+}
+
+.border-bottom-3 {
+    border-bottom: 3px solid #2c3e50;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+.btn-success {
+    background: #2ecc71;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #27ae60;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.number-controls {
+    display: flex;
+    gap: 5px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.number-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.number-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 15px 0;
+    color: #2c3e50;
+}
+
+.message {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    display: none;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+    display: block;
+}
+
+.instructions {
+    margin-top: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.instructions h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.instructions ul {
+    margin-left: 20px;
+    line-height: 1.6;
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+    color: white;
+    font-size: 0.9rem;
 }
