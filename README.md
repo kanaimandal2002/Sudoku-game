@@ -10,8 +10,8 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
 - Complete Sudoku Gameplay: Fill the 9x9 grid according to Sudoku rules
 - Multiple Difficulty Levels: Easy, Medium, and Hard puzzles
 - Input Controls: Number pad for entering values
-- 
-Game Controls:
+  
+# Game Controls:
 Check solution for errors
 Solve the entire puzzle
 Start a new game
