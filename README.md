@@ -15,6 +15,8 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
 - Check solution for errors
 - Solve the entire puzzle
 - Start a new game
+  
+#
 
 - Visual Feedback: Highlights selected cells, errors, and fixed numbers
 - Responsive Design: Works on both desktop and mobile devices
