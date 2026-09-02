@@ -10,6 +10,7 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
 - Complete Sudoku Gameplay: Fill the 9x9 grid according to Sudoku rules
 - Multiple Difficulty Levels: Easy, Medium, and Hard puzzles
 - Input Controls: Number pad for entering values
+- Visual Feedback: Highlights selected cells, errors, and fixed numbers
   
 # Game Controls:
 - Check solution for errors
@@ -18,5 +19,5 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
   
 #
 
-- Visual Feedback: Highlights selected cells, errors, and fixed numbers
+
 - Responsive Design: Works on both desktop and mobile devices
