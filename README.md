@@ -11,8 +11,11 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
 - Multiple Difficulty Levels: Easy, Medium, and Hard puzzles
 - Input Controls: Number pad for entering values
 - Visual Feedback: Highlights selected cells, errors, and fixed numbers
-  
+  - Responsive Design: Works on both desktop and mobile devices
+
+    
 # Game Controls:
+
 - Check solution for errors
 - Solve the entire puzzle
 - Start a new game
@@ -20,4 +23,4 @@ You can view a live version of this tool at [(https://kanaimandal2002.github.io/
 #
 
 
-- Responsive Design: Works on both desktop and mobile devices
+
